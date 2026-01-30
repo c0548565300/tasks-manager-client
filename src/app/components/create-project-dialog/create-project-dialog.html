@@ -1,0 +1,35 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>פרויקט חדש</h2>
+  
+  <mat-dialog-content class="dialog-content">
+    <mat-form-field appearance="outline">
+      <mat-label>בחר צוות</mat-label>
+      <mat-select [value]="selectedTeamId()" (selectionChange)="selectedTeamId.set($event.value)" required>
+        @for (team of teamsService.myTeams(); track team.id) {
+          <mat-option [value]="team.id">{{ team.name }}</mat-option>
+        }
+      </mat-select>
+      <mat-error>חובה לשייך לצוות</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>שם הפרויקט</mat-label>
+      <input matInput [ngModel]="name()" (ngModelChange)="name.set($event)" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>תיאור (אופציונלי)</mat-label>
+      <textarea matInput [ngModel]="description()" (ngModelChange)="description.set($event)"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>ביטול</button>
+    <button mat-flat-button color="primary" 
+            (click)="onCreate()" 
+            [disabled]="!name() || !selectedTeamId() || isSubmitting()">
+      @if (isSubmitting()) { <mat-spinner diameter="20"></mat-spinner> } 
+      @else { צור פרויקט }
+    </button>
+  </mat-dialog-actions>
+</div>

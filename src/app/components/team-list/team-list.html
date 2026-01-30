@@ -1,0 +1,87 @@
+<div class="teams-page-container">
+
+  <div class="teams-header">
+    <div class="header-text">
+      <h2>הצוותים שלי</h2>
+      <p>נהל את חברי הצוות והפרויקטים במקום אחד</p>
+    </div>
+
+    <div class="actions">
+      <div class="search-wrapper">
+        <mat-icon>search</mat-icon>
+        <input type="text" 
+               placeholder="חפש צוות..." 
+               (input)="searchQuery.set($any($event.target).value)" 
+               class="search-input">
+      </div>
+
+      <button mat-flat-button color="primary" class="create-btn" (click)="openCreateTeamDialog()">
+        <mat-icon>add</mat-icon>
+        צוות חדש
+      </button>
+    </div>
+  </div>
+
+  @if (teamsService.isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>טוען נתונים...</p>
+    </div>
+  }
+
+  <div class="teams-grid">
+    @for (team of filteredTeams(); track team.id) {
+      <div class="team-card">
+        
+        <div class="card-header">
+          <div class="team-identity">
+            <div class="icon-circle">
+              <span class="first-letter">{{ team.name.charAt(0) }}</span>
+            </div>
+            <span class="team-name">{{ team.name }}</span>
+          </div>
+          
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="deleteTeam(team)">
+              <mat-icon color="warn">delete</mat-icon>
+              <span>מחק צוות</span>
+            </button>
+          </mat-menu>
+        </div>
+
+        <div class="card-body">
+          <div class="stat-row">
+            <mat-icon class="small-icon">people</mat-icon>
+            <span>{{ team.members_count || 1 }} חברים</span>
+          </div>
+          <button mat-stroked-button class="add-member-btn" (click)="openAddMemberDialog(team)">
+            + הוסף חבר
+          </button>
+        </div>
+
+        <div class="card-footer">
+          <span class="date">נוצר ב: {{ team.created_at | date:'dd/MM/yyyy' }}</span>
+          
+          <button mat-button color="primary" (click)="navigateToProject(team.id)">
+            לפרויקטים
+            <mat-icon iconPositionEnd>arrow_back</mat-icon>
+          </button>
+        </div>
+
+      </div>
+    } @empty {
+      @if (!teamsService.isLoading()) {
+        <div class="empty-state">
+          <mat-icon class="empty-icon">groups_2</mat-icon>
+          <h3>אין צוותים להצגה</h3>
+          <p>זה הזמן ליצור את הצוות הראשון שלך!</p>
+        </div>
+      }
+    }
+  </div>
+
+</div> 
+

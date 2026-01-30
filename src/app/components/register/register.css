@@ -1,0 +1,68 @@
+/* עוטף את כל המסך וממרכז */
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* תופס את כל הגובה */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* הכרטיסייה עצמה */
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+  padding-bottom: 20px;
+  border-radius: 12px; /* פינות עגולות יותר */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* צל רך */
+  background: white;
+  overflow: hidden; /* כדי שהטאבים לא יחרגו מהפינות */
+}
+
+/* אזור הכותרת הפנימי */
+.header-section {
+  text-align: center;
+  margin: 24px 0;
+}
+
+.header-section h2 {
+  margin: 0;
+  color: #2c3e50; /* כחול כהה */
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  color: #7f8c8d;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+
+/* שדות */
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+mat-icon {
+  margin-right: 8px;
+  margin-left: 8px; /* רווח לאייקונים */
+  color: #546e7a;
+}
+
+/* טאבים */
+.tab-icon {
+  margin: 0 0 0 8px; /* תיקון כיוון לאייקון בטאב */
+}
+
+/* כפתור */
+.actions {
+  margin-top: 16px;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  background-color: #2c3e50; /* תואם לתמונה השנייה */
+}

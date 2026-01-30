@@ -1,0 +1,73 @@
+<div class="auth-wrapper">
+  <mat-card class="auth-card">
+    
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" backgroundColor="primary">
+      <a mat-tab-link routerLink="/login" [active]="true">
+        <mat-icon class="tab-icon">login</mat-icon>
+        התחברות
+      </a>
+      <a mat-tab-link routerLink="/register" [active]="false">
+        <mat-icon class="tab-icon">person_add</mat-icon>
+        הרשמה
+      </a>
+    </nav>
+    
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+
+    <mat-card-content>
+      <div class="header-section">
+        <h2>ברוכים השבים!</h2>
+        <p class="subtitle">הכנס את הפרטים שלך כדי להתחבר לניהול המשימות</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>אימייל</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input matInput 
+                 type="email" 
+                 formControlName="email" 
+                 placeholder="name@example.com">
+          @if (loginForm.get('email')?.hasError('email')) {
+            <mat-error>נא להזין כתובת אימייל תקינה</mat-error>
+          }
+          @if (loginForm.get('email')?.hasError('required')) {
+            <mat-error>שדה חובה</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>סיסמה</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput 
+                 [type]="hidePassword() ? 'password' : 'text'" 
+                 formControlName="password">
+          
+          <button mat-icon-button matSuffix (click)="togglePassword($event)" type="button">
+            <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+
+          @if (loginForm.get('password')?.hasError('minlength')) {
+            <mat-error>הסיסמה חייבת להכיל לפחות 6 תווים</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-flat-button 
+                  color="primary" 
+                  class="submit-btn"
+                  type="submit" 
+                  [disabled]="!loginForm.valid || isLoading()">
+            @if (isLoading()) {
+              <mat-spinner diameter="20" color="accent"></mat-spinner>
+            } @else {
+              <span>התחבר</span>
+            }
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

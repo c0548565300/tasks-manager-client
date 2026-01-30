@@ -1,0 +1,100 @@
+<div class="page-container">
+
+  <header class="projects-header">
+    <div class="header-text">
+      <h1>כל הפרויקטים</h1>
+      <p class="subtitle">ניהול ומעקב אחר כל המשימות שלך</p>
+    </div>
+
+    <div class="actions-row">
+      
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>חפש פרויקט...</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput type="text" [formControl]="searchControl" (input)="onSearch($event)">
+        @if (searchQuery()) {
+          <button matSuffix mat-icon-button (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>סנן לפי צוות</mat-label>
+        <mat-select [value]="selectedTeamFilter()" (selectionChange)="selectedTeamFilter.set($event.value)">
+          <mat-option [value]="null">כל הצוותים</mat-option>
+          @for (team of teamsService.myTeams(); track team.id) {
+            <mat-option [value]="team.id">{{ team.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" class="add-btn" (click)="openCreateProjectDialog()">
+        <mat-icon>add</mat-icon>
+        פרויקט חדש
+      </button>
+
+    </div>
+  </header>
+
+  <main>
+    @if (projectsService.isLoading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>טוען את הפרויקטים שלך...</p>
+      </div>
+    }
+
+    @else {
+      <div class="projects-grid">
+        @for (project of filteredProjects(); track project.id) {
+
+          <mat-card class="project-card">
+            <div class="card-accent"></div>
+
+            <mat-card-header>
+              <div mat-card-avatar class="project-avatar">
+                <mat-icon>folder_open</mat-icon>
+              </div>
+              <mat-card-title>{{ project.name }}</mat-card-title>
+              
+              <div class="spacer"></div>
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="deleteProject(project)">
+                  <mat-icon color="warn">delete</mat-icon>
+                  <span>מחק פרויקט</span>
+                </button>
+              </mat-menu>
+
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="description">
+                {{ project.description || 'אין תיאור לפרויקט זה.' }}
+              </p>
+            </mat-card-content>
+
+            <div class="spacer-vertical"></div>
+
+            <mat-card-actions>
+              <button mat-stroked-button color="primary" [routerLink]="['/projects', project.id, 'tasks']">
+                ללוח המשימות
+                <mat-icon iconPositionEnd>arrow_back</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+
+        } @empty {
+          <div class="empty-state">
+            <mat-icon class="large-icon">search_off</mat-icon>
+            <h3>לא נמצאו פרויקטים</h3>
+            <p>נסה לשנות את הסינון או צור פרויקט חדש.</p>
+          </div>
+        }
+      </div>
+    }
+  </main>
+</div>

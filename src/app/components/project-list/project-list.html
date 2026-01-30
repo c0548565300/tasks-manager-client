@@ -1,0 +1,109 @@
+<div class="page-container">
+  <header class="projects-header">
+    <div class="header-content">
+      <h1>פרויקטים של {{ currentTeamName() }}</h1>
+      <p class="subtitle">ניהול ומעקב אחר המשימות בצוות</p>
+    </div>
+
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>חפש פרויקט...</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput type="text" [formControl]="searchControl" (input)="onSearch($event)">
+        @if (searchQuery()) {
+          <button matSuffix mat-icon-button (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+    </div>
+    </header>
+
+  @if (projectsService.isLoading() && !isSubmitting()) {
+    <div class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>טוען פרויקטים...</p>
+    </div>
+  } 
+  
+  @else {
+    <div class="projects-grid">
+      
+      <mat-card class="project-card create-card" (click)="toggleCreate()">
+        <mat-card-content class="create-content">
+          <mat-icon class="plus-icon">add</mat-icon>
+          <h3>צור פרויקט חדש</h3>
+        </mat-card-content>
+      </mat-card>
+
+      @for (project of teamProjects(); track project.id) {
+        <mat-card class="project-card">
+          <div class="card-accent"></div>
+
+          <mat-card-header>
+            <div mat-card-avatar class="project-avatar">
+              <mat-icon>folder_open</mat-icon>
+            </div>
+            <mat-card-title>{{ project.name }}</mat-card-title>
+            
+            <div class="spacer"></div>
+            <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="deleteProject(project)">
+                <mat-icon color="warn">delete</mat-icon>
+                <span>מחק פרויקט</span>
+              </button>
+            </mat-menu>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="description">
+              {{ project.description || 'אין תיאור לפרויקט זה.' }}
+            </p>
+          </mat-card-content>
+
+          <div class="spacer-vertical"></div>
+
+          <mat-card-actions>
+            <button mat-stroked-button color="primary" [routerLink]="['/projects', project.id, 'tasks']">
+              ללוח המשימות
+              <mat-icon iconPositionEnd>arrow_back</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      } @empty {
+        @if (searchQuery()) {
+             <div class="no-results-message">לא נמצאו פרויקטים התואמים לחיפוש.</div>
+        }
+      }
+    </div>
+  }
+
+  @if (isCreateOpen()) {
+    <div class="modal-overlay" (click)="toggleCreate()">
+      <div class="modal-box" (click)="$event.stopPropagation()">
+        <h2>פרויקט חדש ב-{{ currentTeamName() }}</h2>
+        <form [formGroup]="projectForm" (ngSubmit)="createProject()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>שם הפרויקט</mat-label>
+            <input matInput formControlName="name" cdkFocusInitial>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>תיאור</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+          </mat-form-field>
+          
+          <div class="modal-actions">
+            <button mat-button type="button" (click)="toggleCreate()" [disabled]="isSubmitting()">ביטול</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="projectForm.invalid || isSubmitting()">
+               @if (isSubmitting()) { <mat-spinner diameter="20"></mat-spinner> } @else { צור פרויקט }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>הוספת חבר לצוות</h2>
+
+<mat-dialog-content>
+  @if (teamsService.isLoading()) {
+    <div class="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>טוען משתמשים...</p>
+    </div>
+  } @else {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>בחר משתמש</mat-label>
+      <mat-select [(ngModel)]="selectedUserId">
+        @for (user of availableUsers(); track user.id) {
+          <mat-option [value]="user.id">
+            {{ user.name }} ({{ user.email }})
+          </mat-option>
+        }
+        @empty {
+          <mat-option disabled>אין משתמשים זמינים</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>תפקיד</mat-label>
+      <mat-select [(ngModel)]="selectedRole">
+        <mat-option value="member">חבר רגיל</mat-option>
+        <mat-option value="owner">בעלים</mat-option>
+      </mat-select>
+    </mat-form-field>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">ביטול</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="onAdd()"
+    [disabled]="!selectedUserId || isSubmitting()"
+  >
+    @if (isSubmitting()) {
+      <mat-spinner diameter="20"></mat-spinner>
+    } @else {
+      הוסף
+    }
+  </button>
+</mat-dialog-actions>

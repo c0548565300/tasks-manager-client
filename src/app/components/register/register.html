@@ -1,0 +1,72 @@
+<div class="auth-wrapper">
+  <mat-card class="auth-card">
+    
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" backgroundColor="primary">
+      <a mat-tab-link routerLink="/login" [active]="false">
+        <mat-icon class="tab-icon">login</mat-icon>
+        התחברות
+      </a>
+      <a mat-tab-link routerLink="/register" [active]="true">
+        <mat-icon class="tab-icon">person_add</mat-icon>
+        הרשמה
+      </a>
+    </nav>
+    
+    <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+
+    <mat-card-content>
+      <div class="header-section">
+        <h2>יצירת חשבון חדש</h2>
+        <p class="subtitle">הצטרף לצוות והתחל לנהל משימות בקלות</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>שם מלא</mat-label>
+          <mat-icon matPrefix>badge</mat-icon>
+          <input matInput type="text" formControlName="name">
+          @if (registerForm.get('name')?.hasError('required')) {
+            <mat-error>שדה חובה</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>אימייל</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input matInput type="email" formControlName="email">
+          @if (registerForm.get('email')?.hasError('email')) {
+            <mat-error>אימייל לא תקין</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>סיסמה</mat-label>
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput 
+                 [type]="hidePassword() ? 'password' : 'text'" 
+                 formControlName="password">
+          <button mat-icon-button matSuffix (click)="togglePassword($event)" type="button">
+            <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-hint>לפחות 6 תווים</mat-hint>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-flat-button 
+                  color="primary" 
+                  class="submit-btn" 
+                  type="submit" 
+                  [disabled]="!registerForm.valid || isLoading()">
+            @if (isLoading()) {
+              <mat-spinner diameter="20" color="accent"></mat-spinner>
+            } @else {
+              <span>הירשם</span>
+            }
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

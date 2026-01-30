@@ -1,0 +1,37 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+}
+
+.loading p {
+  margin-top: 10px;
+  color: #666;
+}
+
+mat-dialog-content {
+  min-width: 400px;
+  padding: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+mat-dialog-actions {
+  padding: 16px;
+  gap: 8px;
+}
+
+mat-spinner {
+  margin: 0 auto;
+}
+
+/* עיצוב לספינר בכפתור */
+button mat-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}

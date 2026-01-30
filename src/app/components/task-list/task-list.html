@@ -1,0 +1,340 @@
+<div class="board-container">
+  <header class="main-header">
+    <div class="title-group">
+      <h1>לוח משימות | <span class="team-badge">{{ currentTeamName() }}</span></h1>
+    </div>
+
+    <!-- שדה חיפוש -->
+    <div class="search-box">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input 
+        type="text" 
+        placeholder="חיפוש משימות..."
+        [value]="searchQuery()"
+        (input)="searchQuery.set($any($event.target).value)"
+        aria-label="חיפוש משימות"
+        class="search-input"
+      />
+      @if (searchQuery()) {
+        <button 
+          mat-icon-button 
+          class="clear-search" 
+          (click)="searchQuery.set('')"
+          aria-label="נקה חיפוש"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="openTaskModal()"
+      aria-label="יצירת משימה חדשה"
+    >
+      <mat-icon>add</mat-icon> משימה חדשה
+    </button>
+  </header>
+
+  @if (tasksService.error()) {
+    <div class="error-banner" role="alert">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <div class="error-content">
+        <p class="error-message">{{ tasksService.error() }}</p>
+        <button 
+          mat-button 
+          color="primary" 
+          (click)="retryLoadTasks()"
+          aria-label="נסה שוב לטעון משימות"
+        >
+          <mat-icon>refresh</mat-icon> נסה שוב
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (tasksService.isLoading()) {
+    <div class="loading-container" role="status" aria-live="polite">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p class="loading-text">טוען משימות...</p>
+    </div>
+  }
+
+
+  @if (!tasksService.isLoading() && !tasksService.error()) {
+    <main class="kanban-board" cdkDropListGroup>
+      @for (col of columns; track col.id) {
+        <div class="board-column" [ngClass]="col.id">
+          <div class="column-header">
+            <div class="header-right">
+              <h2>{{ col.title }}</h2>
+            </div>
+            <span class="count-badge" [attr.aria-label]="col.title + ' - ' + getFilteredTasks(col.id).length + ' משימות'">
+              {{ getFilteredTasks(col.id).length }}
+            </span>
+          </div>
+
+          <div 
+            class="task-list" 
+            [id]="col.id" 
+            cdkDropList 
+            [cdkDropListData]="getFilteredTasks(col.id)" 
+            (cdkDropListDropped)="drop($event)"
+            [attr.aria-label]="'רשימת משימות ' + col.title"
+            role="list"
+          >
+            <!-- מצב ריק - אין משימות -->
+            @if (getFilteredTasks(col.id).length === 0) {
+              <div class="empty-state" role="status">
+                <mat-icon class="empty-icon">{{ getEmptyIcon(col.id) }}</mat-icon>
+                <p class="empty-text">{{ getEmptyMessage(col.id) }}</p>
+                @if (col.id === 'todo' && searchQuery() === '') {
+                  <button 
+                    mat-stroked-button 
+                    color="primary" 
+                    (click)="openTaskModal()"
+                    class="empty-action"
+                    aria-label="צור משימה ראשונה"
+                  >
+                    <mat-icon>add</mat-icon> צור משימה ראשונה
+                  </button>
+                }
+              </div>
+            }
+
+            <!-- רשימת משימות -->
+            @for (task of getFilteredTasks(col.id); track task.id) {
+              <div 
+                class="task-card" 
+                cdkDrag 
+                [cdkDragData]="task" 
+                (click)="openTaskModal(task)"
+                [attr.aria-label]="'משימה: ' + task.title + ', עדיפות: ' + task.priority"
+                role="listitem"
+                tabindex="0"
+                (keydown.enter)="openTaskModal(task)"
+                (keydown.space)="openTaskModal(task); $event.preventDefault()"
+              >
+                <div class="card-top">
+                  <span 
+                    class="priority-chip" 
+                    [ngClass]="task.priority" 
+                    [matMenuTriggerFor]="pMenu" 
+                    (click)="$event.stopPropagation()"
+                    [attr.aria-label]="'עדיפות: ' + getPriorityLabel(task.priority)"
+                    role="button"
+                    tabindex="0"
+                  >
+                    {{ getPriorityLabel(task.priority) }}
+                  </span>
+                  <button 
+                    class="del-btn" 
+                    (click)="confirmDelete(task, $event)"
+                    [attr.aria-label]="'מחק משימה: ' + task.title"
+                    tabindex="0"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+                <h3 class="task-title">{{ task.title }}</h3>
+                <p class="task-desc">{{ task.description || 'אין תיאור למשימה זו.' }}</p>
+                @if (task.due_date) {
+                  <div class="card-footer">
+                    <span class="date-tag" [attr.aria-label]="'תאריך יעד: ' + (task.due_date | date:'dd/MM/yyyy')">
+                      <mat-icon>event</mat-icon> {{ task.due_date | date:'dd/MM/yyyy' }}
+                    </span>
+                  </div>
+                }
+                <mat-menu #pMenu="matMenu">
+                  <button 
+                    mat-menu-item 
+                    (click)="updatePriority(task, 'low', $event)"
+                    aria-label="שנה עדיפות לנמוכה"
+                  >
+                    נמוכה
+                  </button>
+                  <button 
+                    mat-menu-item 
+                    (click)="updatePriority(task, 'normal', $event)"
+                    aria-label="שנה עדיפות לרגילה"
+                  >
+                    רגילה
+                  </button>
+                  <button 
+                    mat-menu-item 
+                    (click)="updatePriority(task, 'high', $event)"
+                    aria-label="שנה עדיפות לגבוהה"
+                  >
+                    גבוהה
+                  </button>
+                </mat-menu>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </main>
+  }
+</div>
+
+<ng-template #taskDialog>
+  <div class="mega-modal" [class.with-chat]="editingTask()">
+    
+    <div class="task-form-area">
+      <header class="modal-title">
+        <h2 id="task-dialog-title">{{ editingTask() ? 'עריכת משימה' : 'משימה חדשה' }}</h2>
+      </header>
+      
+      <form 
+        [formGroup]="taskForm" 
+        class="stack-form"
+        aria-labelledby="task-dialog-title"
+      >
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>כותרת</mat-label>
+          <input 
+            matInput 
+            formControlName="title"
+            aria-label="כותרת המשימה"
+            aria-required="true"
+          >
+          @if (taskForm.get('title')?.invalid && taskForm.get('title')?.touched) {
+            <mat-error>כותרת היא שדה חובה</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>תאריך יעד</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="picker" 
+            formControlName="due_date"
+            aria-label="תאריך יעד למשימה"
+          >
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>עדיפות</mat-label>
+          <mat-select 
+            formControlName="priority"
+            aria-label="בחר עדיפות למשימה"
+          >
+            <mat-option value="low">נמוכה</mat-option>
+            <mat-option value="normal">רגילה</mat-option>
+            <mat-option value="high">גבוהה</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>תיאור</mat-label>
+          <textarea 
+            matInput 
+            formControlName="description" 
+            rows="5"
+            aria-label="תיאור המשימה"
+          ></textarea>
+        </mat-form-field>
+        
+        <div class="centered-modal-btns">
+          <button 
+            mat-button 
+            (click)="dialog.closeAll()"
+            aria-label="ביטול ושמירה"
+          >
+            ביטול
+          </button>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="saveTask()"
+            [disabled]="taskForm.invalid"
+            [attr.aria-label]="editingTask() ? 'שמור שינויים במשימה' : 'צור משימה חדשה'"
+          >
+            {{ editingTask() ? 'שמור שינויים' : 'צור משימה' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    @if (editingTask()) {
+      <div class="chat-area">
+        <h3 id="comments-title">תגובות ופעילות</h3>
+        
+        <!-- מצב טעינה של תגובות -->
+        @if (commentsService.isLoading()) {
+          <div class="comments-loading" role="status" aria-live="polite">
+            <mat-spinner diameter="30"></mat-spinner>
+            <p>טוען תגובות...</p>
+          </div>
+        }
+
+        @if (!commentsService.isLoading()) {
+          <div 
+            class="comments-scroll"
+            aria-labelledby="comments-title"
+            role="log"
+            aria-live="polite"
+          >
+            @for (c of commentsService.currentComments(); track c.id) {
+              <div class="msg-bubble" role="article">
+                <div class="msg-meta">
+                  <b>{{ c.author_name }}</b> 
+                  <span [attr.aria-label]="'זמן: ' + (c.created_at | date:'HH:mm')">
+                    {{ c.created_at | date:'HH:mm' }}
+                  </span>
+                </div>
+                <div class="msg-text">{{ c.body }}</div>
+              </div>
+            } @empty { 
+              <p class="empty" role="status">אין תגובות עדיין. היה הראשון להגיב!</p> 
+            }
+          </div>
+
+          <div class="chat-input-bar">
+            <input 
+              [formControl]="commentControl" 
+              placeholder="הוסף תגובה..." 
+              (keydown.enter)="sendComment()"
+              aria-label="כתוב תגובה חדשה"
+            >
+            <button 
+              mat-icon-button 
+              (click)="sendComment()"
+              [disabled]="!commentControl.value?.trim()"
+              aria-label="שלח תגובה"
+            >
+              <mat-icon>send</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</ng-template>
+
+<ng-template #deleteConfirmDialog>
+  <h2 mat-dialog-title id="delete-dialog-title">אישור מחיקה</h2>
+  <mat-dialog-content aria-labelledby="delete-dialog-title">
+    האם אתה בטוח שברצונך למחוק את "{{ taskToDelete?.title }}"?
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button 
+      mat-button 
+      [mat-dialog-close]="false"
+      aria-label="ביטול מחיקה"
+    >
+      ביטול
+    </button>
+    <button 
+      mat-raised-button 
+      color="warn" 
+      [mat-dialog-close]="true"
+      aria-label="אישור מחיקת המשימה"
+    >
+      מחק
+    </button>
+  </mat-dialog-actions>
+</ng-template>

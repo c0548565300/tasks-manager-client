@@ -1,1 +1,122 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Rubik', sans-serif !important; 
+  background-color: #f5f7fa; 
+  color: #333;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   2. משתני צבעים (The User's Palette)
+   ========================================================= */
+:root {
+  --primary-color: #3f51b5; 
+  
+  --color-success: #2E7D32;
+  --color-error:   #B00020;
+  --color-warning: #F9A825;
+  --color-info:    #0288D1;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+  letter-spacing: 0.5px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.priority-high {
+  background-color: var(--color-error);
+}
+
+/* עדיפות בינונית (Medium) -> תכלת */
+.priority-normal {
+  background-color: var(--color-info);
+}
+
+/* עדיפות נמוכה (Low) -> ירוק יער */
+.priority-low {
+  background-color: var(--color-success);
+}
+
+/* סטטוס בוצע (Done) */
+.status-done {
+  background-color: var(--color-success);
+  opacity: 0.8;
+}
+
+.status-in-progress {
+  background-color: var(--color-warning);
+  color: #333;
+}
+
+.status-todo {
+  background-color: #757575;
+}
+
+
+.success-snackbar .mdc-snackbar__surface {
+  background-color: var(--color-success) !important;
+}
+.success-snackbar .mdc-snackbar__label {
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.success-snackbar .mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
+
+.error-snackbar .mdc-snackbar__surface {
+  background-color: var(--color-error) !important;
+}
+.error-snackbar .mdc-snackbar__label {
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.error-snackbar .mat-mdc-snack-bar-action {
+  color: white !important; 
+}
+
+
+.warning-snackbar .mdc-snackbar__surface {
+  background-color: var(--color-warning) !important;
+}
+.warning-snackbar .mdc-snackbar__label {
+  color: white !important; 
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.warning-snackbar .mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
+
+.info-snackbar .mdc-snackbar__surface {
+  background-color: var(--color-info) !important;
+}
+.info-snackbar .mdc-snackbar__label {
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.info-snackbar .mat-mdc-snack-bar-action {
+  color: white !important;
+}
+
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}

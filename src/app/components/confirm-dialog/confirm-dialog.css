@@ -1,0 +1,16 @@
+.dialog-container {
+  min-width: 300px; /* רוחב מינימלי שלא יהיה קטן מדי */
+}
+
+.dialog-message {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+/* התאמה לכותרת */
+h2[mat-dialog-title] {
+  margin-bottom: 15px;
+  font-weight: 600;
+}

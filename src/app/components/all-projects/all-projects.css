@@ -1,0 +1,149 @@
+/* מיכל ראשי */
+.page-container {
+  padding: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* כותרת */
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+
+.subtitle {
+  margin: 5px 0 0 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+/* חיפוש */
+.search-container {
+  flex: 1;
+  max-width: 400px;
+  min-width: 250px;
+}
+
+.search-field {
+  width: 100%;
+  font-size: 14px;
+}
+
+/* גריד */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* כרטיס */
+.project-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* פס צבעוני */
+.card-accent {
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--color-info));
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.project-avatar {
+  background-color: #e3f2fd;
+  color: var(--color-info);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* תיאור - כולל התיקון לאזהרה */
+.description {
+  color: #555;
+  line-height: 1.5;
+  margin-top: 10px;
+  
+  /* קיצוץ טקסט אחרי 3 שורות */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3; /* <--- התיקון לאזהרה שלך */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* יישור כפתורים - מחליף את ה-align שהוסר */
+mat-card-actions {
+  display: flex;
+  justify-content: flex-end; /* מיישר לשמאל ב-RTL */
+  padding: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* מצבים שונים */
+.loading-state, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  color: #888;
+  text-align: center;
+}
+
+.large-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+  .projects-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-container {
+    max-width: 100%;
+  }
+}
+.actions-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.search-field { flex: 2; min-width: 200px; }
+.filter-field { flex: 1; min-width: 150px; }
+.add-btn { height: 56px; margin-bottom: 22px; /* יישור עם השדות */ }
+
+.spacer-vertical { flex-grow: 1; }

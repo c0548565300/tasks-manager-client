@@ -1,0 +1,187 @@
+
+.teams-page-container {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.teams-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-text h2 {
+  font-size: 2rem; /* כותרת גדולה יותר */
+  font-weight: 700;
+  color: #1a237e; /* כחול כהה עמוק */
+  margin: 0 0 8px 0;
+}
+
+.header-text p {
+  color: #607d8b;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-wrapper mat-icon {
+  position: absolute;
+  right: 12px;
+  color: #78909c;
+}
+
+.search-input {
+  height: 48px; /* גבוה יותר */
+  width: 280px; /* רחב יותר */
+  padding: 0 40px 0 16px; /* מקום לאייקון ולטקסט */
+  border: 1px solid #cfd8dc;
+  border-radius: 50px; /* עיגול מלא */
+  font-size: 1rem;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 4px rgba(63, 81, 181, 0.1);
+  width: 320px;
+  outline: none;
+}
+
+/* --- Create Button (מוגדל) --- */
+.create-btn {
+  height: 48px !important;
+  border-radius: 50px !important;
+  padding: 0 24px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+/* --- Grid --- */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 32px;
+}
+
+/* --- Team Card --- */
+.team-card {
+  background: white;
+  border-radius: 20px; /* פינות עגולות יותר */
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* צל עדין */
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 200px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(63, 81, 181, 0.15);
+  border-color: rgba(63, 81, 181, 0.3);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon-circle {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  color: #1565c0;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.team-name {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #263238;
+}
+
+.card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: 16px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #546e7a;
+  background-color: #f5f7fa;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.add-member-btn {
+  border-radius: 20px;
+  color: #3f51b5;
+  border-color: #e8eaf6;
+}
+
+.card-footer {
+  padding-top: 16px;
+  border-top: 1px solid #eceff1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date {
+  font-size: 0.85rem;
+  color: #b0bec5;
+}
+
+/* --- Empty State --- */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px;
+  background: #fafafa;
+  border-radius: 16px;
+  border: 2px dashed #e0e0e0;
+}
+
+.empty-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #cfd8dc;
+  margin-bottom: 16px;
+}
