@@ -53,8 +53,7 @@ export class CommentsService {
     return this.http.post<Comment>(this.apiUrl, payload).pipe(
       tap((newComment) => {
         this.currentComments.update(list => [...list, newComment]);
-        this.currentComments.update(list => [...list, newComment]);
-        this.toastService.showSuccess('התגובה נוספה בהצלחה 💬');
+        this.toastService.showSuccess('התגובה נוספה בהצלחה!');
       }),
       catchError((err) => {
         if (err.status === 400 || err.status === 422) {
